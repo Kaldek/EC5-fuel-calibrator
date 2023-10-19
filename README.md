@@ -21,6 +21,7 @@ This code is coupled with a custom Arduino Shield which interfaces the Arduino t
 
 ### Baseline circuit
 [Prototype Circuit](https://github.com/Kaldek/EC5-fuel-calibrator/blob/main/Fuel%20gauge%20prototype-2.jpg?raw=true)
+
 [Prototype Shield](https://github.com/Kaldek/EC5-fuel-calibrator/blob/main/Prototype%20Shield.jpg?raw=true)
 
 ## Enhanced code
