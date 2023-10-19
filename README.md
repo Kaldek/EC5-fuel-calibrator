@@ -22,10 +22,10 @@ This code is coupled with a custom Arduino Shield which interfaces the Arduino t
 ## Enhanced code
 The enhanced code will be written once the PCB prototype has been completed.  This enhanced design intercepts additional signals which can be used for the purpose of further increasing gauge accuracy, and also allows for direct control over the low fuel warning light.  The low fuel warning light circuit on the VR4 is separate to to the fuel gauge circuit, allowing us to control this circuit.  The proposed enhanced design will monitor the "low fuel switch" located in the left side of the tank and the "low fuel rheostat" located in the right side of the tank. 
 
-## Description of the low fuel light circuitry
+### Description of the low fuel light circuitry
 The low fuel rheostat is part of the fuel pump assembly.  From factory, this rheostat is wired in series with the low fuel switch.  If the low fuel switch (essentially a float-controlled switch) on the left side of the tank is activated, the circuit is closed and the low fuel rheostat is now in-circuit with the low fuel warning light.  As the level of fuel drops, the changing resistance of the rheostat allows for more current to pass through the low fuel warning light, causing this light to shine at various brightness levels based on how little fuel is left.  A very bright light indicates very low fuel.
 
 Because this low fuel light system is decoupled from the fuel gauge, its activation does not correlate with the gauge and, from the perspective of the driver, behave erratically.  In some cases, such as during cornering, the low fuel light might be on and then suddenly switch off completely rather than "dim out".  This is caused by fuel sloshing back over the tank saddle to the left side of the tank and causing the low fuel switch to disconnect.
 
-## Enhanced calibration behaviour
+### Enhanced calibration behaviour
 The proposed enhanced design will add monitoring of the low fuel switch to instruct the Arduino to use an altered fuel table which will use a combination of signals from the lower fuel sendor rheostat and the low fuel rheostat.  The exact values in this table cannot be created until we source an entire fuel tank assembly and carefully monitor the behaviour of the low fuel switch and low fuel rheostat by filling the tank with preicesly measured amounts of fuel.  **This is work still to be done.**
