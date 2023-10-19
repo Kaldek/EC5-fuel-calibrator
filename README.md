@@ -1,5 +1,5 @@
 # EC5-fuel-calibrator
-Fuel Gauge recalibration project for the 8th-generation Mitsubishi Galant and Legnum VR4 (chassis codes EC5A and EC5W).
+Fuel Gauge recalibration project for the 8th-generation Mitsubishi Galant and Legnum VR4 (chassis codes EC5A and EC5W).  Likely, the project will also function for the Lancer Evolution, models 1 through 9 (I through IX).
 
 The stock fuel gauge on these cars is extremely inaccurate due to the use of a simple *linear* analogue gauge that reacts to a change in resistance of two rheostats (upper and lower) in the fuel tank which are wired in-series.  The fuel tank however uses a saddle design where the middle of the tank has a "hump" in the bottom to allow for the driveshaft to reach the rear differential.  This results in *non-linear* fuel levels from the fuel senders.  The right side of the saddle design has the fuel pump and one of the fuel sender rheostats.  To avoid fuel starvation and fuel being stuck in the side of the tank where there is no fuel pump, the fuel delivery system makes use of a "jet pipe" (venturi pump) located in the left side of the tank.  
 
