@@ -1,6 +1,6 @@
 const int Gauge = 5;
 const int Sender = A0;
-int SenderValue = 51 ;
+int SenderValue = 51 ; // Set initial needle position to "Full"
 
 struct Range {
   int low;
