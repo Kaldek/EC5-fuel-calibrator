@@ -11,7 +11,7 @@ unsigned long currentMillis;
 const unsigned long period = 10000;
 bool reading = false;
 int UpperRheostatLowest, UpperRheostatHighest, MainRheostatLowest, MainRheostatHighest, LowFuelRheostatLowest, LowFuelRheostatHighest;
-int analog0, analog1, analog2;
+float analog0, analog1, analog2, vcc;
 
 long readVcc() {
   long result;
