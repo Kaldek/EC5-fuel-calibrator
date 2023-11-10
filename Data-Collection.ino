@@ -59,7 +59,8 @@ void loop() {
     currentMillis = millis();
 
     if (currentMillis - startMillis <= period) {
-      long vcc=readVcc();
+      long vccMillivolts=readVcc();
+      float vcc = vccMillivolts / 1000.0 // Convert Vcc to volts
       int rawA0 = analogRead(A0);
       int rawA1 = analogRead(A1);
       int rawA2 = analogRead(A2);
@@ -76,17 +77,17 @@ void loop() {
       if (analog2 > LowFuelRheostatHighest) LowFuelRheostatHighest = analog2;
     } else {
       Serial.print("Upper Rheostat Lowest: ");
-      Serial.println(UpperRheostatLowest * (5.0 / 1023.0));
+      Serial.println(UpperRheostatLowest * (vcc / 1023.0));
       Serial.print("Upper Rheostat Highest: ");
-      Serial.println(UpperRheostatHighest * (5.0 / 1023.0));
+      Serial.println(UpperRheostatHighest * (vcc / 1023.0));
       Serial.print("Main Rheostat Lowest: ");
-      Serial.println(MainRheostatLowest * (5.0 / 1023.0));
+      Serial.println(MainRheostatLowest * (vcc / 1023.0));
       Serial.print("Main Rheostat Highest: ");
-      Serial.println(MainRheostatHighest * (5.0 / 1023.0));
+      Serial.println(MainRheostatHighest * (vcc / 1023.0));
       Serial.print("Low Fuel Rheostat Lowest: ");  
-      Serial.println(LowFuelRheostatLowest * (5.0 / 1023.0));
+      Serial.println(LowFuelRheostatLowest * (vcc / 1023.0));
       Serial.print("Low Fuel Rheostat Highest: ");  
-      Serial.println(LowFuelRheostatHighest * (5.0 / 1023.0));
+      Serial.println(LowFuelRheostatHighest * (vcc / 1023.0));
 
       Serial.print("Low Fuel Switch State: ");
       if (switchState == HIGH) {
