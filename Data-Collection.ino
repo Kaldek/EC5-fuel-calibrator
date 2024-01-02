@@ -13,6 +13,10 @@ bool reading = false;
 int UpperRheostatLowest, UpperRheostatHighest, MainRheostatLowest, MainRheostatHighest;
 float analog0, analog1, vcc;
 
+// Constants for fixed resistors in the voltage divider
+const float UpperRheostatFixedResistor = 33.0; // Ohms
+const float MainRheostatFixedResistor = 22.0;  // Ohms
+
 long readVcc() {
   long result;
   // Read 1.1V reference against AVcc
@@ -73,10 +77,20 @@ void loop() {
       Serial.println(UpperRheostatLowest * (vcc / 1023.0));
       Serial.print("Upper Rheostat Highest: ");
       Serial.println(UpperRheostatHighest * (vcc / 1023.0));
+      // Calculate and print the derived resistance of the Upper rheostat
+      float upperRheostatResistance = UpperRheostatHighest * (vcc / 1023.0) / (vcc - UpperRheostatHighest * (vcc / 1023.0)) * UpperRheostatFixedResistor;
+      Serial.print("Derived Upper Rheostat Resistance: ");
+      Serial.println(upperRheostatResistance);
+      
       Serial.print("Main Rheostat Lowest: ");
       Serial.println(MainRheostatLowest * (vcc / 1023.0));
       Serial.print("Main Rheostat Highest: ");
       Serial.println(MainRheostatHighest * (vcc / 1023.0));
+      
+      float mainRheostatResistance = MainRheostatHighest * (vcc / 1023.0) / (vcc - MainRheostatHighest * (vcc / 1023.0)) * MainRheostatFixedResistor;
+      Serial.print("Derived Main Rheostat Resistance: ");
+      Serial.println(mainRheostatResistance);
+      
       Serial.print("Low Fuel Switch State: ");
       if (switchState == HIGH) {
         Serial.println("CLOSED");
