@@ -10,8 +10,8 @@ unsigned long startMillis;
 unsigned long currentMillis;
 const unsigned long period = 10000;
 bool reading = false;
-int UpperRheostatLowest, UpperRheostatHighest, MainRheostatLowest, MainRheostatHighest, LowFuelRheostatLowest, LowFuelRheostatHighest;
-float analog0, analog1, analog2, vcc;
+int UpperRheostatLowest, UpperRheostatHighest, MainRheostatLowest, MainRheostatHighest;
+float analog0, analog1, vcc;
 
 long readVcc() {
   long result;
@@ -46,9 +46,7 @@ void loop() {
       UpperRheostatLowest = 1023;
       UpperRheostatHighest = 0;
       MainRheostatLowest = 1023;
-      MainRheostatHighest = 0;
-      LowFuelRheostatLowest = 1023;
-      LowFuelRheostatHighest = 0;
+      MainRheostatHighest = 0;      
     }
     delay(50);
   }
@@ -63,18 +61,13 @@ void loop() {
       float vcc = vccMillivolts / 1000.0 // Convert Vcc to volts
       int rawA0 = analogRead(A0);
       int rawA1 = analogRead(A1);
-      int rawA2 = analogRead(A2);
       analog0 = rawA0 * vcc / 1024;
       analog1 = rawA1 * vcc / 1024;
-      analog2 = rawA2 * vcc / 1024;
       
-
       if (analog0 < UpperRheostatLowest) UpperRheostatLowest = analog0;
       if (analog0 > UpperRheostatHighest) UpperRheostatHighest = analog0;
       if (analog1 < MainRheostatLowest) MainRheostatLowest = analog1;
-      if (analog1 > MainRheostatHighest) MainRheostatHighest = analog1;
-      if (analog2 < LowFuelRheostatLowest) LowFuelRheostatLowest = analog2;
-      if (analog2 > LowFuelRheostatHighest) LowFuelRheostatHighest = analog2;
+      if (analog1 > MainRheostatHighest) MainRheostatHighest = analog1;      
     } else {
       Serial.print("Upper Rheostat Lowest: ");
       Serial.println(UpperRheostatLowest * (vcc / 1023.0));
@@ -84,11 +77,6 @@ void loop() {
       Serial.println(MainRheostatLowest * (vcc / 1023.0));
       Serial.print("Main Rheostat Highest: ");
       Serial.println(MainRheostatHighest * (vcc / 1023.0));
-      Serial.print("Low Fuel Rheostat Lowest: ");  
-      Serial.println(LowFuelRheostatLowest * (vcc / 1023.0));
-      Serial.print("Low Fuel Rheostat Highest: ");  
-      Serial.println(LowFuelRheostatHighest * (vcc / 1023.0));
-
       Serial.print("Low Fuel Switch State: ");
       if (switchState == HIGH) {
         Serial.println("CLOSED");
