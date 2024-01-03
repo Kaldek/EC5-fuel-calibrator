@@ -3,7 +3,7 @@ const int LowFuelSwitch = 3;
 const int ledPin = 13;
 
 int buttonState = 0;        
-int lastButtonState = 0;     
+int lastButtonState = HIGH;     
 int switchState = 0;
 
 unsigned long startMillis; 
