@@ -19,7 +19,7 @@ const float MainRheostatFixedResistor = 22.0;  // Ohms
 
 void setup() {
   pinMode(buttonPin, INPUT_PULLUP);
-  pinMode(LowFuelSwitch, INPUT);  
+  pinMode(LowFuelSwitch, INPUT_PULLUP);  
   pinMode(ledPin, OUTPUT);
   Serial.begin(9600);
 }
@@ -78,9 +78,9 @@ void loop() {
       
       Serial.print("Low Fuel Switch State: ");
       if (switchState == HIGH) {
-        Serial.println("CLOSED");
-      } else {
         Serial.println("OPEN");
+      } else {
+        Serial.println("CLOSED");
       }
 
       reading = false;
