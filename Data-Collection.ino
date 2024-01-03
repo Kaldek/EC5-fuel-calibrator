@@ -11,28 +11,14 @@ unsigned long currentMillis;
 const unsigned long period = 10000;
 bool reading = false;
 int UpperRheostatLowest, UpperRheostatHighest, MainRheostatLowest, MainRheostatHighest;
-float analog0, analog1, vcc;
+float analog0, analog1;
 
 // Constants for fixed resistors in the voltage divider
 const float UpperRheostatFixedResistor = 33.0; // Ohms
 const float MainRheostatFixedResistor = 22.0;  // Ohms
-const float VREF = 5.0; // VREF for Nano Every
-
-// long readVcc() {
-//  long result;
-  // Read 1.1V reference against AVcc
-//  ADMUX = _BV(REFS0) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1);
-//  delay(2); // Wait for Vref to settle
-//  ADCSRA |= _BV(ADSC); // Convert
-//  while (bit_is_set(ADCSRA, ADSC));
-//  result = ADCL;
-//  result |= ADCH << 8;
-//  result = 1126400L / result; // Calculate Vcc (in mV); 1126400 = 1.1*1024*1000
-//  return result;
-// }
 
 void setup() {
-  pinMode(buttonPin, INPUT);
+  pinMode(buttonPin, INPUT_PULLUP);
   pinMode(LowFuelSwitch, INPUT);  
   pinMode(ledPin, OUTPUT);
   Serial.begin(9600);
@@ -62,12 +48,10 @@ void loop() {
     currentMillis = millis();
 
     if (currentMillis - startMillis <= period) {
-    //  long vccMillivolts=readVcc();
-    //  float vcc = vccMillivolts / 1000.0 // Convert Vcc to volts
       int rawA0 = analogRead(A0);
       int rawA1 = analogRead(A1);
-      analog0 = rawA0 * VREF / 1024;
-      analog1 = rawA1 * VREF / 1024;
+      analog0 = rawA0 * 5.0 / 1024;
+      analog1 = rawA1 * 5.0 / 1024;
       
       if (analog0 < UpperRheostatLowest) UpperRheostatLowest = analog0;
       if (analog0 > UpperRheostatHighest) UpperRheostatHighest = analog0;
@@ -75,20 +59,20 @@ void loop() {
       if (analog1 > MainRheostatHighest) MainRheostatHighest = analog1;      
     } else {
       Serial.print("Upper Rheostat Lowest: ");
-      Serial.println(UpperRheostatLowest * (VREF / 1023.0));
+      Serial.println(UpperRheostatLowest * (5.0 / 1023.0));
       Serial.print("Upper Rheostat Highest: ");
-      Serial.println(UpperRheostatHighest * (VREF / 1023.0));
+      Serial.println(UpperRheostatHighest * (5.0 / 1023.0));
       // Calculate and print the derived resistance of the Upper rheostat
-      float upperRheostatResistance = UpperRheostatHighest * (VREF / 1023.0) / (vcc - UpperRheostatHighest * (VREF / 1023.0)) * UpperRheostatFixedResistor;
+      float upperRheostatResistance = UpperRheostatHighest * (5.0 / 1023.0) / (5.0 - UpperRheostatHighest * (5.0 / 1023.0)) * UpperRheostatFixedResistor;
       Serial.print("Derived Upper Rheostat Resistance: ");
       Serial.println(upperRheostatResistance);
       
       Serial.print("Main Rheostat Lowest: ");
-      Serial.println(MainRheostatLowest * (VREF / 1023.0));
+      Serial.println(MainRheostatLowest * (5.0 / 1023.0));
       Serial.print("Main Rheostat Highest: ");
-      Serial.println(MainRheostatHighest * (VREF / 1023.0));
+      Serial.println(MainRheostatHighest * (5.0 / 1023.0));
       
-      float mainRheostatResistance = MainRheostatHighest * (VREF / 1023.0) / (vcc - MainRheostatHighest * (VREF / 1023.0)) * MainRheostatFixedResistor;
+      float mainRheostatResistance = MainRheostatHighest * (5.0 / 1023.0) / (5.0 - MainRheostatHighest * (5.0 / 1023.0)) * MainRheostatFixedResistor;
       Serial.print("Derived Main Rheostat Resistance: ");
       Serial.println(mainRheostatResistance);
       
