@@ -18,7 +18,7 @@ const float MainRheostatFixedResistor = 22.0;  // Ohms
 const float ReferenceVoltage = 4.96; // Nano Every +5V output is 4.96 volts
 
 // Set up averaging for reading the ADC pins
-const int numSamples = 10; // Number of samples to average. Adjust as desired, noting more samples takes longer.
+const int numSamples = 50; // Number of samples to average. Adjust as desired, noting more samples takes longer.
 
 void setup() {
   pinMode(buttonPin, INPUT_PULLUP);
@@ -35,7 +35,9 @@ void loop() {
   
   if (buttonState != lastButtonState) {
     if (buttonState == HIGH) {
-      Serial.println("Button pressed");
+      // Remove line below if not using ANSI terminal for serial monitor
+      Serial.print("\033[2J\033[H"); // Clear screen and move cursor to home position in PuTTY
+      Serial.println("Button pressed - Collecting samples for 10 seconds");
       digitalWrite(ledPin, HIGH);
       startMillis = millis();
       reading = true;
@@ -55,23 +57,47 @@ void loop() {
     currentMillis = millis();
 
     if (currentMillis - startMillis <= period) {
-      int rawA0 = analogRead(A0);
-      int rawA1 = analogRead(A1);
-      
-      if (rawA1 < UpperRheostatLowest) UpperRheostatLowest = rawA1;
-      if (rawA1 > UpperRheostatHighest) UpperRheostatHighest = rawA1;
-      
-      if (rawA0 < MainRheostatLowest) MainRheostatLowest = rawA0;
-      if (rawA0 > MainRheostatHighest) MainRheostatHighest = rawA0;      
+      long sumA0 = 0;
+      long sumA1 = 0;
+      int rawA0Lowest = 1023;
+      int rawA0Highest = 0;
+      int rawA1Lowest = 1023;
+      int rawA1Highest = 0;
+
+      for (int i = 0; i < numSamples; i++) {
+        int rawA0 = analogRead(A0);
+        int rawA1 = analogRead(A1);
+
+        sumA0 += rawA0;
+        sumA1 += rawA1;
+
+        if (rawA0 < rawA0Lowest) rawA0Lowest = rawA0;
+        if (rawA0 > rawA0Highest) rawA0Highest = rawA0;
+        if (rawA1 < rawA1Lowest) rawA1Lowest = rawA1;
+        if (rawA1 > rawA1Highest) rawA1Highest = rawA1;
+
+        delay(10); // Small delay between readings
+      }
+
+      // Calculate the averages
+      float averageA0 = (float)sumA0 / numSamples;
+      float averageA1 = (float)sumA1 / numSamples;
+
+      // Update the lowest and highest if the current average is a new low or high
+      if (averageA0 < MainRheostatLowest) MainRheostatLowest = averageA0;
+      if (averageA0 > MainRheostatHighest) MainRheostatHighest = averageA0;
+      if (averageA1 < UpperRheostatLowest) UpperRheostatLowest = averageA1;
+      if (averageA1 > UpperRheostatHighest) UpperRheostatHighest = averageA1;
     } else {
+      Serial.println();
+      Serial.println("-------------------------------------------------");
+      Serial.println("New Data");
+      Serial.println();
       Serial.print("Upper Rheostat Lowest: ");
       Serial.println(UpperRheostatLowest * (ReferenceVoltage / 1023.0));
       
       Serial.print("Upper Rheostat Highest: ");
-      Serial.println(UpperRheostatHighest * (ReferenceVoltage / 1023.0));
-      Serial.print("Upper Rheostat Raw: ");
-      Serial.println(analogRead(A1));
-            
+      Serial.println(UpperRheostatHighest * (ReferenceVoltage / 1023.0));     
       // Calculate and print the derived resistance of the Upper rheostat
       float upperRheostatResistance = UpperRheostatLowest * (ReferenceVoltage / 1023.0) / (ReferenceVoltage - UpperRheostatLowest * (ReferenceVoltage / 1023.0)) * UpperRheostatFixedResistor;
       Serial.print("Derived Upper Rheostat Resistance: ");
