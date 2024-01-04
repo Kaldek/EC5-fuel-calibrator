@@ -2,6 +2,7 @@ const int Gauge = 5;
 const int Sender = A0;
 int SenderValue = 51;
 
+// Suitable only for ATmega328 based devices
 long readVcc() {
   long result;
   // Read 1.1V reference against AVcc
