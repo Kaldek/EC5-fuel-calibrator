@@ -56,4 +56,10 @@ The enhanced design performs the following circuit changes:
  - Decouple the upper and lower rheostats and read them individually
  - Remove all use of the stock low fuel light circuitry, except for driving the low fuel light based on software control
 
-These changes instruct the Arduino to use an altered fuel table which uses a combination of signals from the two fuel sender rheostats. 
+These changes instruct the Arduino to use an altered fuel table which uses a combination of signals from the two fuel sender rheostats.  These rheostats are constantly updated each time the Arduino sketch completes a loop, allowing for immediate fuel level updates based on fuel slosh during cornering.
+
+### Accuracy of enhanced calibration data
+The enhanced calibration data provides litre-accurate measurements of the fuel in both sides of the tank at **any given time**.  This means that regardless of where the fuel is in the tank, we can provide an accurate total for driving the fuel gauge.
+
+#### Fuel tank failure handling
+The enhanced calibration data also allows us to handle any failures of the jet pipe componentry.  For example, if we find that the secondary fuel sender is reading very low fuel but the primary sender (left side of tank) is showing high fuel, this can trigger a defined flashing sequence for the low fuel warning light to let us know that fuel is not being pumped back across to the side of the tank where the pump resides.
