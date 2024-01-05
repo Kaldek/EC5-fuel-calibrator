@@ -5,9 +5,6 @@ const int Gauge = 5;
 const int PrimarySender = A0;
 const int SecondarySender = A1;
 
-// Constants for fixed resistors in the voltage divider
-const float UpperRheostatFixedResistor = 33.0; // Ohms
-const float MainRheostatFixedResistor = 22.0;  // Ohms
 const float ReferenceVoltage = 4.96; // Nano Every +5V output is 4.96 volts
 
 // Set up averaging for reading the ADC pins
@@ -24,68 +21,68 @@ struct FuelLevelRange {
 // Initialize an array of FuelLevelRange structures for Primary and Secondary sources.
 FuelLevelRange primaryFuelLevelRanges[] = {
     {0, 3.18, 3.21},
-    {4, 3.15, 3.16},
-    {5, 3.11, 3.12},
-    {6, 3.08, 3.09},
+    {4, 3.15, 3.17},
+    {5, 3.11, 3.14},
+    {6, 3.08, 3.10},
     {7, 3.06, 3.07},
-    {8, 3.04, 3.04},
+    {8, 3.04, 3.05},
     {9, 2.99, 3.03},
-    {10, 2.96, 2.97},
-    {11, 2.91, 2.92},
-    {12, 2.88, 2.89},
-    {13, 2.82, 2.83},
-    {14, 2.77, 2.78},
-    {15, 2.71, 2.72},
-    {16, 2.65, 2.66},
-    {17, 2.53, 2.55},
-    {18, 2.48, 2.49},
-    {19, 2.42, 2.42},
-    {20, 2.34, 2.35},
-    {21, 2.22, 2.25},
-    {22, 2.05, 2.08},
-    {23, 1.99, 2.00},
-    {24, 1.84, 1.86},
-    {25, 1.73, 1.74},
-    {26, 1.66, 1.70},
-    {27, 1.61, 1.63},
-    {28, 1.56, 1.58},
-    {29, 1.45, 1.47},
+    {10, 2.96, 2.98},
+    {11, 2.91, 2.95},
+    {12, 2.88, 2.90},
+    {13, 2.82, 2.87},
+    {14, 2.77, 2.81},
+    {15, 2.71, 2.76},
+    {16, 2.65, 2.70},
+    {17, 2.53, 2.64},
+    {18, 2.48, 2.52},
+    {19, 2.42, 2.47},
+    {20, 2.34, 2.41},
+    {21, 2.22, 2.33},
+    {22, 2.05, 2.21},
+    {23, 1.99, 2.04},
+    {24, 1.84, 1.98},
+    {25, 1.73, 1.83},
+    {26, 1.66, 1.72},
+    {27, 1.61, 1.65},
+    {28, 1.56, 1.60},
+    {29, 1.45, 1.55},
     {30, 1.42, 1.44},
-    {31, 1.36, 1.41},
-    {32, 1.18, 1.25}
+    {31, 1.18, 1.41},
+    {32, 0.00, 1.17}
 };
 
 FuelLevelRange secondaryFuelLevelRanges[] = {
     {0, 3.15, 3.16},
-    {4, 3.07, 3.09},
+    {4, 3.07, 3.14},
     {5, 3.05, 3.06},
-    {6, 3.02, 3.03},
-    {7, 2.97, 2.98},
-    {8, 2.92, 2.93},
-    {9, 2.87, 2.88},
-    {10, 2.81, 2.83},
+    {6, 3.02, 3.04},
+    {7, 2.97, 3.01},
+    {8, 2.92, 2.98},
+    {9, 2.87, 2.91},
+    {10, 2.81, 2.86},
     {11, 2.77, 2.80},
-    {12, 2.68, 2.69},
-    {13, 2.65, 2.66},
-    {14, 2.57, 2.59},
-    {15, 2.48, 2.49},
-    {16, 2.43, 2.44},
-    {17, 2.36, 2.37},
-    {18, 2.24, 2.26},
+    {12, 2.68, 2.76},
+    {13, 2.65, 2.67},
+    {14, 2.57, 2.64},
+    {15, 2.48, 2.56},
+    {16, 2.43, 2.47},
+    {17, 2.36, 2.42},
+    {18, 2.24, 2.35},
     {19, 2.22, 2.23},
-    {20, 2.10, 2.12},
-    {21, 2.04, 2.04},
-    {22, 1.87, 1.89},
+    {20, 2.10, 2.21},
+    {21, 2.04, 2.09},
+    {22, 1.87, 2.03},
     {23, 1.84, 1.86},
-    {24, 1.61, 1.63},
-    {25, 1.45, 1.48},
+    {24, 1.61, 1.83},
+    {25, 1.45, 1.60},
     {26, 1.42, 1.44},
-    {27, 1.37, 1.38},
-    {28, 1.29, 1.30},
-    {29, 1.21, 1.13},
-    {30, 1.01, 1.03},
-    {31, 0.79, 0.80},
-    {32, 0.50, 0.52}
+    {27, 1.37, 1.41},
+    {28, 1.29, 1.36},
+    {29, 1.21, 1.30},
+    {30, 1.01, 1.20},
+    {31, 0.79, 1.00},
+    {32, 0.00, 0.78}
 };
 
 struct GaugeRange {
@@ -119,33 +116,24 @@ const GaugeRange GaugeRanges[] = {
 const int numPrimaryLevels = sizeof(primaryFuelLevelRanges) / sizeof(FuelLevelRange);
 const int numSecondaryLevels = sizeof(secondaryFuelLevelRanges) / sizeof(FuelLevelRange);
 
-// Function to determine the closest fuel level based on reading and a range array.
-int getClosestFuelLevelFromReading(float reading, FuelLevelRange ranges[], int numRanges) {
-    float closestDiff = FLT_MAX;
-    int closestLevel = -1;
+int getFuelLevelFromReading(float reading, FuelLevelRange ranges[], int numRanges) {
     for (int i = 0; i < numRanges; i++) {
         if (reading >= ranges[i].low && reading <= ranges[i].high) {
-            return ranges[i].level; // Exact match found
-        } else {
-            // Find the range with the smallest difference to the reading
-            float diff = min(abs(reading - ranges[i].low), abs(reading - ranges[i].high));
-            if (diff < closestDiff) {
-                closestDiff = diff;
-                closestLevel = ranges[i].level;
-            }
+            return ranges[i].level; // Return as soon as a match is found
         }
     }
-    return closestLevel; // Return the closest level if no exact match is found
+    return ranges[numRanges - 1].level; // Return the last range's level as default
 }
 
 
 // Function to determine the total fuel level based on primary and secondary readings.
 int getTotalFuelLevel(float primaryReading, float secondaryReading) {
-    int primaryFuelLevel = getClosestFuelLevelFromReading(primaryReading, primaryFuelLevelRanges, numPrimaryLevels);
-    int secondaryFuelLevel = getClosestFuelLevelFromReading(secondaryReading, secondaryFuelLevelRanges, numSecondaryLevels);
+    int primaryFuelLevel = getFuelLevelFromReading(primaryReading, primaryFuelLevelRanges, numPrimaryLevels);
+    int secondaryFuelLevel = getFuelLevelFromReading(secondaryReading, secondaryFuelLevelRanges, numSecondaryLevels);
     
-	return primaryFuelLevel + secondaryFuelLevel;
+    return primaryFuelLevel + secondaryFuelLevel;
 }
+
 
 
 void setup() {
@@ -156,8 +144,16 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
     
-  float primaryReading = analogRead(PrimarySender);
-  float secondaryReading = analogRead(SecondarySender);
+  int primaryRawReading = analogRead(PrimarySender);
+  int secondaryRawReading = analogRead(SecondarySender);
+  float primaryReading = primaryRawReading * (ReferenceVoltage / 1023.0);
+  float secondaryReading = secondaryRawReading * (ReferenceVoltage / 1023.0);
+  
+  Serial.print("\033[2J\033[H");
+  Serial.print("Primary Voltage Reading: ");
+  Serial.println(primaryReading);
+  Serial.print("Secondary Voltage reading: ");
+  Serial.println(secondaryReading);
 
   // Get the total fuel level for the given readings
   int fuelLevel = getTotalFuelLevel(primaryReading, secondaryReading);
