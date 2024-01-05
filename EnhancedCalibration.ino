@@ -5,8 +5,14 @@ const int Gauge = 5;
 const int Light = 6;
 const int PrimarySender = A0;
 const int SecondarySender = A1;
-
 const float ReferenceVoltage = 4.96; // Nano Every +5V output is 4.96 volts
+
+// Additional variables for timing and flag control
+unsigned long lastTime10LitresExceeded = 0;
+unsigned long lastTime8LitresExceeded = 0;
+unsigned long lastTime6LitresExceeded = 0;
+
+int lightFlag = 0; // 0 for off, 1 for solid, 2 for slow flash, 3 for fast flash
 
 // Set up the fuel level ranges
 struct FuelLevelRange {
@@ -133,6 +139,7 @@ int getTotalFuelLevel(float primaryReading, float secondaryReading) {
 }
 
 void setup() {
+  pinMode(Light, OUTPUT);
   digitalWrite(Light, LOW);
 }
 
@@ -144,7 +151,50 @@ void loop() {
 
   // Get the total fuel level for the given readings
   int fuelLevel = getTotalFuelLevel(primaryReading, secondaryReading);
-  
+
+  unsigned long currentTime = millis();
+
+  // Update times when fuel level exceeds thresholds
+  if(fuelLevel > 10) lastTime10LitresExceeded = currentTime;
+  if(fuelLevel > 8) lastTime8LitresExceeded = currentTime;
+  if(fuelLevel > 6) lastTime6LitresExceeded = currentTime;
+
+  // Determine light status based on fuel level and timing
+  if(fuelLevel == 10 && currentTime - lastTime10LitresExceeded >= 20000) {
+    // Light steady on for fuel level at 10 litres
+    lightFlag = 1;
+  } else if(fuelLevel == 8 && currentTime - lastTime8LitresExceeded >= 20000) {
+    // Light slow flash for fuel level at 8 litres
+    lightFlag = 2;
+  } else if(fuelLevel == 6 && currentTime - lastTime6LitresExceeded >= 20000) {
+    // Light fast flash for fuel level at 6 litres
+    lightFlag = 3;
+  } else if(fuelLevel > 10) {
+    // Ensure light is off when fuel level is above 10 litres for 20 seconds
+    lightFlag = 0;
+  }
+
+  // Control light based on lightFlag
+  switch(lightFlag) {
+    case 1: // Solid light
+      digitalWrite(Light, HIGH);
+      break;
+    case 2: // Slow flashing light
+      digitalWrite(Light, HIGH);
+      delay(600);
+      digitalWrite(Light, LOW);
+      delay(600);
+      break;
+    case 3: // Fast flashing light
+      digitalWrite(Light, HIGH);
+      delay(200);
+      digitalWrite(Light, LOW);
+      delay(200);
+      break;
+    default:
+      digitalWrite(Light, LOW);
+  }
+
   // Drive the Fuel Gauge using PWM based on the level of fuel in the tank
   for (int i = 0; i < sizeof(GaugeRanges) / sizeof(GaugeRanges[0]); ++i) {
    if (fuelLevel >= GaugeRanges[i].LowestLitre && fuelLevel <= GaugeRanges[i].HighestLitre) {
@@ -154,9 +204,24 @@ void loop() {
   }  
   
   // Testing of Low Fuel Light control
-  digitalWrite(Light, HIGH);
-  delay(250);
-  digitalWrite(Light, LOW);
-  delay(250);
+  if(fuelLevel == 10) {
+    // Light steady on for fuel level at 10 litres
+    digitalWrite(Light, HIGH);
+  } else if(fuelLevel == 8) {
+    // Light slow flash for fuel level at 8 litres
+    digitalWrite(Light, HIGH);
+    delay(600); // Slow flash - light is on for 600ms
+    digitalWrite(Light, LOW);
+    delay(600); // Slow flash - light is off for 600ms
+  } else if(fuelLevel == 6) {
+    // Light fast flash for fuel level at 6 litres
+    digitalWrite(Light, HIGH);
+    delay(200); // Fast flash - light is on for 200ms
+    digitalWrite(Light, LOW);
+    delay(200); // Fast flash - light is off for 200ms
+  } else {
+    // Ensure light is off when not at 10, 8 or 6 litres
+    digitalWrite(Light, LOW);
+  }
   
 }
