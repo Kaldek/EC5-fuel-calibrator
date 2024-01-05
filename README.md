@@ -46,7 +46,7 @@ This code is coupled with a custom Arduino Shield which interfaces the Arduino t
 
 [Prototype Circuit](https://github.com/Kaldek/EC5-fuel-calibrator/blob/main/Prototype%20Shield.jpg)
 
-[Prototype Shield](https://github.com/Kaldek/EC5-fuel-calibrator/blob/main/Prototype%20Shield.jpg?raw=true)
+[Prototype Shield](https://github.com/Kaldek/EC5-fuel-calibrator/blob/main/Prototype%20Shield.jpg)
 
 ## Enhanced code
 The enhanced code will be written once the PCB prototype has been completed and we have obtained accurate readings from the upper and lower rheostats independently, along with validating this data.  This enhanced design intercepts the rheostats separately as dedicated signals (2-41 ohms and 2-65 ohms), allowing for increased gauge accuracy, and also allows for direct control over the low fuel warning light.  The low fuel warning light circuit on the VR4 is separate to to the fuel gauge circuit, allowing us to control this circuit.
