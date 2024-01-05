@@ -7,10 +7,6 @@ const int SecondarySender = A1;
 
 const float ReferenceVoltage = 4.96; // Nano Every +5V output is 4.96 volts
 
-// Set up averaging for reading the ADC pins
-const int numSamples = 50; // Number of samples to average. Adjust as desired, noting more samples takes longer.
-
-
 // Set up the fuel level ranges
 struct FuelLevelRange {
     int level;
@@ -125,7 +121,6 @@ int getFuelLevelFromReading(float reading, FuelLevelRange ranges[], int numRange
     return ranges[numRanges - 1].level; // Return the last range's level as default
 }
 
-
 // Function to determine the total fuel level based on primary and secondary readings.
 int getTotalFuelLevel(float primaryReading, float secondaryReading) {
     int primaryFuelLevel = getFuelLevelFromReading(primaryReading, primaryFuelLevelRanges, numPrimaryLevels);
@@ -134,16 +129,12 @@ int getTotalFuelLevel(float primaryReading, float secondaryReading) {
     return primaryFuelLevel + secondaryFuelLevel;
 }
 
-
-
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-    
   int primaryRawReading = analogRead(PrimarySender);
   int secondaryRawReading = analogRead(SecondarySender);
   float primaryReading = primaryRawReading * (ReferenceVoltage / 1023.0);
@@ -169,6 +160,6 @@ void loop() {
   // Output the result
   Serial.print("The total fuel level is: ");
   Serial.println(fuelLevel);
-  delay(5000);
+  // delay(5000);
   
 }
