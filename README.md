@@ -22,6 +22,11 @@ To avoid fuel starvation and fuel being stuck in the side of the tank where ther
 
 *It is known that on high powered AWD Mitsubishi Lancers, the return line that passes by the venturi can be too restrictive, causing excessive fuel pressures in the fuel rail (e.g., 60 psi at idle).  Drilling out this line is a common change, but the venturi must not be over-drilled as this will stop the jet pipe from functioning and cause fuel starvation at the pump.*
 
+### Low fuel light
+The low fuel light circuit is separate from the fuel senders used and behaves inconsistently to the stock fuel gauge.  It is based on an NTC resistor mounted next to the fuel pump which allows current to flow through the Low Fuel bulb if it heats up in the absence of being cooled by fuel.  From factory, this resistor is wired in series with the low fuel switch.  If the low fuel switch (essentially a float-controlled switch) on the left side of the tank is activated, the circuit is closed and the low fuel resistor is now in-circuit with the low fuel warning light.  When this resistor is only partially immersed in fuel (or not at all), it will begin to heat up and reduce its resistance, causing the low fuel light to shine at various brightness levels based on how much the resistor is being cooled or not.  It is a very blunt instrument and not greatly useful.  A very bright light is supposed to generally indicate very low fuel.
+
+Because this low fuel light system is decoupled from the fuel gauge, its activation does not correlate with the gauge and, from the perspective of the driver, behave erratically.  In some cases, such as during cornering, the low fuel light might be on and then suddenly switch off completely rather than "dim out".  This is caused by fuel sloshing back over the tank saddle to the left side of the tank and causing the low fuel switch to disconnect.
+
 ### Summary of issues
 From the perspective of measuring fuel remaining in the tank this entire stock system is imperfect, because the fuel gauge has no way of knowing how much fuel might be in the left or side of the tank with any real accuracy.  As a result, we can end up in one of a few less than optimal situations.  The fuel gauge may incorrectly report low fuel, or more fuel than is available, and may drop inconsistently.  The inconsistent fuel gauge behaviour may manifest as:
 * Rapidly dropping when there has been no change in driving behaviour
@@ -44,16 +49,11 @@ This code is coupled with a custom Arduino Shield which interfaces the Arduino t
 [Prototype Shield](https://github.com/Kaldek/EC5-fuel-calibrator/blob/main/Prototype%20Shield.jpg?raw=true)
 
 ## Enhanced code
-The enhanced code will be written once the PCB prototype has been completed and we have obtained accurate readings from the upper and lower rheostats independently.  This enhanced design intercepts the rheostats separately as dedicated signals (2-41 ohms and 2-65 ohms) along with the low fuel switch, allowing for increased gauge accuracy, and also allows for direct control over the low fuel warning light.  The low fuel warning light circuit on the VR4 is separate to to the fuel gauge circuit, allowing us to control this circuit.
-
-### Description of the low fuel light circuitry
-The low fuel NTC resistor is part of the fuel pump assembly.  From factory, this resistor is wired in series with the low fuel switch.  If the low fuel switch (essentially a float-controlled switch) on the left side of the tank is activated, the circuit is closed and the low fuel resistor is now in-circuit with the low fuel warning light.  When this resistor is only partially immersed in fuel (or not at all), it will begin to heat up and reduce its resistance, causing the low fuel light to shine at various brightness levels based on how much the resistor is being cooled or not.  It is a very blunt instrument and not greatly useful.  A very bright light is supposed to generally indicate very low fuel.
-
-Because this low fuel light system is decoupled from the fuel gauge, its activation does not correlate with the gauge and, from the perspective of the driver, behave erratically.  In some cases, such as during cornering, the low fuel light might be on and then suddenly switch off completely rather than "dim out".  This is caused by fuel sloshing back over the tank saddle to the left side of the tank and causing the low fuel switch to disconnect.
+The enhanced code will be written once the PCB prototype has been completed and we have obtained accurate readings from the upper and lower rheostats independently, along with validating this data.  This enhanced design intercepts the rheostats separately as dedicated signals (2-41 ohms and 2-65 ohms), allowing for increased gauge accuracy, and also allows for direct control over the low fuel warning light.  The low fuel warning light circuit on the VR4 is separate to to the fuel gauge circuit, allowing us to control this circuit.
 
 ### Enhanced calibration behaviour
-The proposed enhanced design performs the following circuit changes:
+The enhanced design performs the following circuit changes:
  - Decouple the upper and lower rheostats and read them individually
- - Monitor the low fuel switch as a backup/confirmation of fuel levels in the left side of the tank
+ - Remove all use of the stock low fuel light circuitry, except for driving the low fuel light based on software control
 
-These changes will instruct the Arduino to use an altered fuel table which will use a combination of signals from these three sources.  The exact values in this table cannot be created until we comple our careful monitoring of the behaviour of these sources by filling the tank with preicesly measured amounts of fuel.  As of January 2024, this work has begin and should be completed before February 2024.
+These changes instruct the Arduino to use an altered fuel table which uses a combination of signals from the two fuel sender rheostats. 
