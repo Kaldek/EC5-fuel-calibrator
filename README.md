@@ -44,7 +44,7 @@ This code is coupled with a custom Arduino Shield which interfaces the Arduino t
 ### Baseline Prototype circuit
 *Note that the baseline Prototype circuit uses a legacy design based off the classic Arduino using an ATMega328*
 
-[Prototype Circuit](https://github.com/Kaldek/EC5-fuel-calibrator/blob/main/Prototype%20Shield.jpg)
+[Prototype Circuit](https://github.com/Kaldek/EC5-fuel-calibrator/blob/main/Fuel%20gauge%20prototype-2.jpg)
 
 [Prototype Shield](https://github.com/Kaldek/EC5-fuel-calibrator/blob/main/Prototype%20Shield.jpg)
 
