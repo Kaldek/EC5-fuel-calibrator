@@ -5,12 +5,7 @@ const int Gauge = 5;
 const int Light = 6;
 const int PrimarySender = A1;
 const int SecondarySender = A0;
-const float ReferenceVoltage = 4.99; // Nano Every +5V output is 4.96 volts
-
-// Additional variables for timing and flag control
-unsigned long lastTime11LitresExceeded = 0;
-unsigned long lastTime8LitresExceeded = 0;
-unsigned long lastTime6LitresExceeded = 0;
+const float ReferenceVoltage = 4.99; // Nano Every +5V output
 
 int lightFlag;
 
@@ -101,7 +96,7 @@ struct GaugeRange {
 
 // Fuel Gauge needle position table
 const GaugeRange GaugeRanges[] = {
-  {0, 7, 141},  // EMPTY (0-7 litres available)
+  {0, 7, 141},  // EMPTY (0-7 litres in tank)
   {8, 9, 151},
   {10, 12, 160},
   {13, 14, 166},
@@ -128,31 +123,19 @@ const int numSecondaryLevels = sizeof(secondaryFuelLevelRanges) / sizeof(FuelLev
 int getFuelLevelFromReading(float reading, FuelLevelRange ranges[], int numRanges) {
     for (int i = 0; i < numRanges; i++) {
         if (reading >= ranges[i].low && reading <= ranges[i].high) {
-          //  Serial.print("Primary Fuel table level selected: ");
-          //  Serial.println(ranges[i].level);
-          //  delay(200);
             return ranges[i].level; // Return as soon as a match is found
         }
     }
     return ranges[numRanges - 1].level; // Return the last range's level as default
 }
 
-
-// Function to determine the total fuel level based on primary and secondary readings.
-//int getTotalFuelLevel(float primaryReading, float secondaryReading) {
-//    int primaryFuelLevel = getFuelLevelFromReading(primaryReading, primaryFuelLevelRanges, numPrimaryLevels);
-//    int secondaryFuelLevel = getFuelLevelFromReading(secondaryReading, secondaryFuelLevelRanges, numSecondaryLevels);
-//    
-//    return primaryFuelLevel + secondaryFuelLevel;
-//}
-
 void setup() {
   pinMode(Light, OUTPUT);
   digitalWrite(Light, HIGH);
-  // Enable below if debugging
-  Serial.begin(9600);
   analogWrite(Gauge,186);
   delay(1000);
+  // Enable below if debugging
+  // Serial.begin(9600);
 }
 
 void loop() {
@@ -189,9 +172,6 @@ void loop() {
     lastUpdateTime = currentTime;
   }
 
-
-
-
 // Control light based on lightFlag
   switch (lightFlag) {
     case 1: // Solid light
@@ -223,6 +203,8 @@ void loop() {
    analogWrite(Gauge, GaugeRanges[i].pwm);
    // break;
     }
+  
+  // Enable the below if debugging
   /*
   Serial.print("\033[2J\033[H");
   Serial.print("The total fuel level is: ");
@@ -231,10 +213,7 @@ void loop() {
   Serial.println(primaryFuelLevel);
   Serial.print("Secondary Rheostat Fuel Level:");
   Serial.println(secondaryFuelLevel);
-  
   delay(1000);
  */ 
-  }  
-  
-   
+  } 
 }
