@@ -23,7 +23,7 @@ const long interval = 5000; // 5 seconds interval
 // Initialize an array of FuelLevelRange structures for Primary and Secondary sources.
 // Both sources use ADC integers converted to voltage values.  This allows for alteration of the reference voltage without further changes to the code.
 FuelLevelRange primaryFuelLevelRanges[] = {
-    {0, 3.18, 6.00},
+    {0, 3.18, 5.10},
     {4, 3.15, 3.17},
     {5, 3.11, 3.14},
     {6, 3.08, 3.10},
@@ -56,7 +56,7 @@ FuelLevelRange primaryFuelLevelRanges[] = {
 };
 
 FuelLevelRange secondaryFuelLevelRanges[] = {
-    {0, 3.16, 6.00},
+    {0, 3.16, 5.10},
     {4, 3.07, 3.15},
     {5, 3.05, 3.06},
     {6, 3.02, 3.04},
@@ -143,6 +143,9 @@ void loop() {
   int secondaryRawReading = analogRead(SecondarySender);
   float primaryReading = primaryRawReading * (ReferenceVoltage / 1023.0);
   float secondaryReading = secondaryRawReading * (ReferenceVoltage / 1023.0);
+  // Round the results to two decimal places
+  primaryReading = round(primaryReading * 100) / 100.0;
+  secondaryReading = round(secondaryReading * 100) / 100.0;
 
   int primaryFuelLevel, secondaryFuelLevel;
 
@@ -175,25 +178,21 @@ void loop() {
 // Control light based on lightFlag
   switch (lightFlag) {
     case 1: // Solid light
-      // Serial.println("Light Flag Case 1");
       digitalWrite(Light, HIGH);
       break;
     case 2: // Slow flashing light
-      // Serial.println("Light Flag Case 2");
       digitalWrite(Light, HIGH);
       delay(600);
       digitalWrite(Light, LOW);
      delay(600);
       break;
     case 3: // Fast flashing light
-      // Serial.println("Light Flag Case 3");
       digitalWrite(Light, HIGH);
       delay(200);
       digitalWrite(Light, LOW);
       delay(200);
       break;
    default:
-      // Serial.println("Light Flag DEFAULTED");
       digitalWrite(Light, LOW);
   }
 
@@ -205,7 +204,7 @@ void loop() {
     }
   
   // Enable the below if debugging
-  /*
+/*
   Serial.print("\033[2J\033[H");
   Serial.print("The total fuel level is: ");
   Serial.println(fuelLevel);
@@ -214,6 +213,6 @@ void loop() {
   Serial.print("Secondary Rheostat Fuel Level:");
   Serial.println(secondaryFuelLevel);
   delay(1000);
- */ 
-  } 
+*/ 
+  }  
 }
