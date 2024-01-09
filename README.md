@@ -51,3 +51,4 @@ The design has the following major deviations from the stock circuitry:
 ### Accuracy of enhanced calibration data
 The calibration data provides litre-accurate measurements of the fuel in both sides of the tank at **any given time**.  This means that regardless of where the fuel is in the tank, we can provide an accurate total for driving the fuel gauge.
 
+![Schematic](https://github.com/Kaldek/EC5-fuel-calibrator/blob/main/Enhanced%20schematic.png)https://github.com/Kaldek/EC5-fuel-calibrator/blob/main/Enhanced%20schematic.png
