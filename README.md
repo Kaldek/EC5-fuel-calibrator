@@ -36,30 +36,18 @@ From the perspective of measuring fuel remaining in the tank this entire stock s
 In particular, "hanging" of the fuel gauge needle is common once the upper fuel sender rheostat has bottomed out.  This is because the remaining sender rheostat is in the right side of the fuel tank which is constantly being "topped up" by the jet pipe system which is pulling fuel from the left-side of the tank.
 
 
-## Baseline code for gauge calibration
-The baseline code (simple-table) uses a simple table of value ranges that control a PWM signal.  The fuel sender rheostat signal is measured using a 5V voltage source and voltage divider connect to Arduino pin #0.  Knowing that the signals from the rheostats are not linear, the signal received by the Arduino is compared to a lookup table.  To make the gauge read (more) accurately than stock, each row in the lookup table is assigned a PWM value which drives the switching of a MOSFET connected to Arduino Pin #5.  The switching of this MOSFET controls the average current flowing through the fuel gauge, which allows the PWM control to accurately force the needle to a desired position.
+## Design
+The design uses an Arduino Nano Every to read the fuel senders individually and drive both the fuel gauge and low fuel light.  The fuel sender rheostat signals are measured using a 5V voltage source and voltage divider connect to Arduino pins A0 and A1.  Knowing that the signals from the rheostats are not linear, the signal received by the Arduino is compared to a lookup table for each fuel sender rheostat and assigns a "litre" rating to each reading.  The two readings are added together to calculate the total amount of fuel in the tank.
 
-This code is coupled with a custom Arduino Shield which interfaces the Arduino to the wiring harness of the car, for power + ground and intercepting the fuel gauge and rheostat connections.  This code provides an improved fuel gauge, but it is not to our satisfaction and an enhancement to the calibration project is being developed.
+To make the gauge read extremely accurately than stock, each fuel level range is assigned a PWM value which drives the switching of a MOSFET connected to Arduino Pin D5.  The switching of this MOSFET controls the average current flowing through the fuel gauge, which allows the PWM control to accurately force the needle to a desired position.  The needle positions are calibrated to the major mark on the gauge (Empty, 1/4, Half, 3/4, Full) as well as the smaller "pips" in between.
 
-### Baseline Prototype circuit
-*Note that the baseline Prototype circuit uses a legacy design based off the classic Arduino using an ATMega328*
+The low fuel light is driven digitally ON or OFF based on the calculated fuel readings.  Different light behaviours (solid on, slow flash, fast flash) are applied based on the amount of fuel left in the tank.
 
-[Prototype Circuit](https://github.com/Kaldek/EC5-fuel-calibrator/blob/main/Fuel%20gauge%20prototype-2.jpg)
-
-[Prototype Shield](https://github.com/Kaldek/EC5-fuel-calibrator/blob/main/Prototype%20Shield.jpg)
-
-## Enhanced code
-The enhanced code will be written once the PCB prototype has been completed and we have obtained accurate readings from the upper and lower rheostats independently, along with validating this data.  This enhanced design intercepts the rheostats separately as dedicated signals (2-41 ohms and 2-65 ohms), allowing for increased gauge accuracy, and also allows for direct control over the low fuel warning light.  The low fuel warning light circuit on the VR4 is separate to to the fuel gauge circuit, allowing us to control this circuit.
-
-### Enhanced calibration behaviour
-The enhanced design performs the following circuit changes:
+### Circuit changes to stock wiring
+The design has the following major deviations from the stock circuitry:
  - Decouple the upper and lower rheostats and read them individually
  - Remove all use of the stock low fuel light circuitry, except for driving the low fuel light based on software control
 
-These changes instruct the Arduino to use an altered fuel table which uses a combination of signals from the two fuel sender rheostats.  These rheostats are constantly updated each time the Arduino sketch completes a loop, allowing for immediate fuel level updates based on fuel slosh during cornering.
-
 ### Accuracy of enhanced calibration data
-The enhanced calibration data provides litre-accurate measurements of the fuel in both sides of the tank at **any given time**.  This means that regardless of where the fuel is in the tank, we can provide an accurate total for driving the fuel gauge.
+The calibration data provides litre-accurate measurements of the fuel in both sides of the tank at **any given time**.  This means that regardless of where the fuel is in the tank, we can provide an accurate total for driving the fuel gauge.
 
-#### Fuel tank failure handling
-The enhanced calibration data also allows us to handle any failures of the jet pipe componentry.  For example, if we find that the secondary fuel sender is reading very low fuel but the primary sender (left side of tank) is showing high fuel, this can trigger a defined flashing sequence for the low fuel warning light to let us know that fuel is not being pumped back across to the side of the tank where the pump resides.
