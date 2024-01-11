@@ -15,4 +15,7 @@ The fuel gauge in these cars is an air core gauge, essentially two coils of wire
 Using a PWM drive we effectively control the average current passing throug the coil.  As the fuel gauge is so slow, these pulses don't affect the gauge and it behaves just as it does when the current is controlled by a rheostat.
 
 ## Why didn't you use the low fuel light circuitry?
-We control the low fuel light based on our now accurate measurements of fuel int he tank.  The stock low fuel light circuitry is only activated when the left side of the tank drops below 9 litres and the right side of the tank is also low.  Its behaviour was inconsistent at best, but with our accurate measurements of fuel it is better to digitally control this light.
+We control the low fuel light based on our now accurate measurements of fuel in the tank.  The stock low fuel light circuitry is only activated when the left side of the tank drops below 9 litres and the right side of the tank is also low.  Its behaviour was inconsistent at best, but with our accurate measurements of fuel it is better to digitally control this light.
+
+## Can I add my own digital fuel readout?
+Absolutely.  You can alter the Arduino sketch to include OLED display drivers and display the amount of fuel remaining in the tank.  If you do this, we recommend that you add some serious "smoothing" to the fuel level displayed.  Whilst the gauge itself responds slowly, the Arduino completes hundreds of loops per second and the reading of each rheostat will range up and down as you go over bumps and through corners.  Smoothing this information out to something like a 20 second average reading will make the digital display much more useful.
