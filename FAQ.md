@@ -7,7 +7,7 @@ The fuel tank from an EC5W (Legnum VR4 Wagon) was removed and emptied completely
 Once both sides of the fuel tank were just at the point of the saddle, fuel was added one litre at a time again but this time taking measurements from both rheostats.
 
 ### Since you took such accurate measurements, what size is the fuel tank?
-When fitted to the car, the fuel tank can hold 67.5 litres of total fuel.  Of this 67.5 litres, about 6 litres is unusable due to the levels of fuel in the tank being too low for the fuel pump to pick up or the jet pipe to move from one side of the tank to the other.  Ergo, you can absolutely get 61.5 litres of fuel and possibly a couple more.  Some fuel remains in the tank for the purpose of sediment fallout and is not used.
+When fitted to the car, the fuel tank can hold 67.5 litres of total fuel.  Of this 67.5 litres, about 6 litres is unusable due to the levels of fuel in the tank being too low for the fuel pump to pick up or the jet pipe to move from one side of the tank to the other.  Ergo, you can absolutely get 61.5 litres of fuel and possibly a couple more on a good day.  Some fuel remains in the tank for the purpose of sediment fallout and is not used.
 
 ## How come PWM drive works on the fuel gauge?
 The fuel gauge in these cars is an air core gauge, essentially two coils of wire.  The outer coil sets a magnetic field and the inner coil is mounted to the needle.  As current through the coil changes, it causes the needle to change position within the magnetic field.
