@@ -76,17 +76,17 @@ const GaugeRange GaugeRanges[] = {
   {4, 6, 151},
   {8, 10, 160},
   {12, 14, 166},
-  {16, 18, 171},  // Quarter tank
-  {20, 22, 174},
-  {24, 26, 176},
+  {16, 18, 172},  // Quarter tank
+  {20, 22, 176},
+  {24, 26, 178},
   {28, 32, 183},  // Half tank
   {34, 36, 194},
   {38, 40, 199},
   {42, 44, 204},
   {46, 48, 208},  // Three Quarter tank
   {50, 52, 215},
-  {54, 56, 225},
-  {58, 60, 248}   // FULL
+  {54, 56, 224},
+  {58, 60, 246}   // FULL
 };
 
 const int numPrimaryLevels = sizeof(primaryFuelLevelRanges) / sizeof(FuelLevelRange);
@@ -108,7 +108,10 @@ void setup() {
   analogWrite(Gauge, 255);
   unsigned long startTime = millis();
   while (millis() - startTime < 10000) {
+    // Do nothing, just wait for 10 seconds
+    // You can add code here if needed in the future
   }
+  // Serial.begin(9600);
 }
 
 void loop() {
@@ -126,12 +129,29 @@ void loop() {
   primaryReading = round(primaryReading * 100) / 100.0;
   secondaryReading = round(secondaryReading * 100) / 100.0;
 
+   /*
+    Serial.print("\033[2J\033[H");
+    Serial.print("Main: ");
+    Serial.println(primaryReading);
+    Serial.print("Secondary: ");
+    Serial.println(secondaryReading);
+   */
+
   int primaryFuelLevel = getFuelLevelFromReading(primaryReading, primaryFuelLevelRanges, numPrimaryLevels);
   int secondaryFuelLevel = getFuelLevelFromReading(secondaryReading, secondaryFuelLevelRanges, numSecondaryLevels);
-  
+  /*
+  Serial.print("Main Fuel: ");
+    Serial.println(primaryFuelLevel);
+    Serial.print("Secondary Fuel: ");
+    Serial.println(secondaryFuelLevel);
+  */
   // Get the combined fuel level
   int currentFuelLevel = primaryFuelLevel + secondaryFuelLevel;
-  
+  /*
+    Serial.print("Total Fuel: ");
+    Serial.println(currentFuelLevel);
+     delay(150);
+  */
   // EMA calculation
   if (!emaInitialized) {
     emaFuelLevel = currentFuelLevel; // Initialize EMA with the first reading
@@ -149,9 +169,9 @@ void loop() {
   if ((fuelLevel != lastFuelLevel) && (currentTime - lastUpdateTime >= interval)) {
     if ((fuelLevel <= 11) && (switchState == LOW)) {
       lightFlag = 1; // Steady on
-    
+    } else {
+      lightFlag = 0; // Light Off
     }
-
     lastFuelLevel = fuelLevel;
     lastUpdateTime = currentTime;
   }
@@ -170,6 +190,11 @@ void loop() {
   for (int i = 0; i < sizeof(GaugeRanges) / sizeof(GaugeRanges[0]); ++i) {
     if (fuelLevel >= GaugeRanges[i].LowestLitre && fuelLevel <= GaugeRanges[i].HighestLitre) {
       analogWrite(Gauge, GaugeRanges[i].pwm);
+      /*
+      Serial.print("Gauge write: ");
+      Serial.println(GaugeRanges[i].pwm);
+      delay(150);
+      */
       break;
     }
   }
