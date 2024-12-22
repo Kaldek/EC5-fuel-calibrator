@@ -108,8 +108,8 @@ void setup() {
   analogWrite(Gauge, 255);
   unsigned long startTime = millis();
   while (millis() - startTime < 10000) {
-    // Do nothing, just wait for 10 seconds
-    // You can add code here if needed in the future
+    // Wait for 10 seconds to stop the fuel gauge needle dropping at boot up.
+   
   }
   // Serial.begin(9600);
 }
